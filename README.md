@@ -66,3 +66,10 @@ The playbook is idempotent. After the first successful configuration run, repeat
 - Ansible successfully connects to the instance over SSH.
 - Nginx is installed, enabled, and running.
 - A custom web page is reachable over HTTP.
+
+## Inventory Generation
+
+The Ansible inventory is generated from Terraform output using:
+
+```bash
+./scripts/generate_inventory.sh
