@@ -18,4 +18,12 @@
       ansible.builtin.service:
         name: nginx
         state: started
-        enabled: true   
+        enabled: true
+
+    - name: Deploy custom index page
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /var/www/html/index.html
+        owner: root
+        group: root
+        mode: "0644"       
