@@ -44,3 +44,25 @@ AWS Security Group
 Ubuntu EC2 instance
    |
 Nginx
+
+
+
+## Ansible Configuration
+
+Ansible is used to configure the EC2 web server after Terraform provisions the infrastructure.
+
+Current playbook tasks:
+
+- Updates the apt package cache
+- Installs Nginx
+- Ensures Nginx is enabled and running
+- Deploys a custom `index.html` page
+
+The playbook is idempotent. After the first successful configuration run, repeated runs complete with `changed=0`.
+
+## Current Validation
+
+- Terraform successfully provisions AWS networking, security group, and EC2 resources.
+- Ansible successfully connects to the instance over SSH.
+- Nginx is installed, enabled, and running.
+- A custom web page is reachable over HTTP.
