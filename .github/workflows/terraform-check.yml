@@ -5,7 +5,7 @@ on:
     paths:
       - "terraform/**"
       - ".github/workflows/terraform-check.yml"
-    push:
+  push:
       branches:
         - main
       paths: 
