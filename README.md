@@ -27,3 +27,20 @@ Internet → EC2 instance → Nginx / Docker-based web service
 - Nginx
 - Docker
 - GitHub Actions
+
+## Current Architecture - V1
+
+Internet traffic reaches a public EC2 instance running Nginx.
+
+```text
+Internet
+   |
+Public IP / DNS
+   |
+AWS Security Group
+   |-- HTTP 80 from 0.0.0.0/0
+   |-- SSH 22 from trusted public IP only
+   |
+Ubuntu EC2 instance
+   |
+Nginx
