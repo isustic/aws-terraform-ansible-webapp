@@ -1,0 +1,4 @@
+aws_region       = "eu-central-1"
+project_name     = "aws-terraform-ansible-webapp"
+environment      = "dev"
+allowed_ssh_cidr = "YOUR_PUBLIC_IP/32"
