@@ -8,4 +8,7 @@ output "public_subnet_id" {
   value       = aws_subnet.public.id
 }
 
-
+output "web_security_group_id" {
+  description = "ID of the web server security group."
+  value       = aws_security_group.web.id
+}
