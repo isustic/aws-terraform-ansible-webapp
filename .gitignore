@@ -17,3 +17,6 @@ id_rsa.pub
 .DS_Store
 .vscode/
 .idea/
+
+# Ansible inventory
+ansible/inventory.ini
