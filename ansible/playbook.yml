@@ -43,4 +43,13 @@
       ansible.builtin.user:
         name: ubuntu
         groups: docker
-        append: true   
+        append: true
+
+    - name: Run test Nginx container
+      community.docker.docker_container:
+        name: test-nginx
+        image: nginx:alpine
+        state: started
+        restart_policy: unless-stopped
+        published_ports:
+          - "8080:80"       
