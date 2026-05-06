@@ -9,25 +9,19 @@
         update_cache: true
         cache_valid_time: 3600
 
-    - name: Install Nginx
-      ansible.builtin.apt:
-        name: nginx
-        state: present
-
-    - name: Ensure Nginx is enabled and running
+    - name: Stop host Nginx if installed
       ansible.builtin.service:
         name: nginx
-        state: started
-        enabled: true
+        state: stopped
+        enabled: false
+      failed_when: false
 
-    - name: Deploy custom index page
-      ansible.builtin.copy:
-        src: files/index.html
-        dest: /var/www/html/index.html
-        owner: root
-        group: root
-        mode: "0644"       
-    
+    - name: Remove host Nginx package
+      ansible.builtin.apt:
+        name: nginx
+        state: absent
+        purge: true
+
     - name: Install Docker
       ansible.builtin.apt:
         name: docker.io
@@ -45,11 +39,34 @@
         groups: docker
         append: true
 
-    - name: Run test Nginx container
+    - name: Create web content directory
+      ansible.builtin.file:
+        path: /opt/web/
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Deploy custom index page 
+      ansible.builtin.copy:
+        src: files/index.html
+        dest: /opt/web/index.html
+        owner: root
+        group: root
+        mode: "0644"   
+
+    - name: Run Dockerized Nginx web container
       community.docker.docker_container:
-        name: test-nginx
+        name: web-nginx
         image: nginx:alpine
         state: started
         restart_policy: unless-stopped
         published_ports:
-          - "8080:80"       
+          - "80:80"
+        volumes:
+          - /opt/web/index.html:/usr/share/nginx/html/index.html:ro
+
+    - name: Remove old test Nginx container if present
+      community.docker.docker_container:
+        name: test-nginx
+        state: absent               
