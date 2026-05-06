@@ -167,3 +167,32 @@ The container maps host port `8080` to container port `80`:
 EC2 host port 8080 → container port 80
 ```
 
+## Dockerized Web Service
+
+The public web service now runs inside a Docker container instead of directly on the EC2 host.
+
+Ansible performs the following:
+
+- Stops and disables host-level Nginx if present
+- Removes the host Nginx package
+- Installs Docker
+- Ensures Docker is enabled and running
+- Creates `/opt/web`
+- Copies the custom `index.html` file to `/opt/web/index.html`
+- Runs an `nginx:alpine` container named `web-nginx`
+- Publishes host port `80` to container port `80`
+- Mounts `/opt/web/index.html` into the container as read-only
+
+Current traffic flow:
+
+```text
+Internet
+   |
+EC2 public IP :80
+   |
+Docker published port 80
+   |
+nginx:alpine container :80
+   |
+custom index.html
+```
