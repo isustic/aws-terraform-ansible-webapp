@@ -103,3 +103,54 @@ Checks:
 - `ansible-playbook -i ansible/inventory.ini.example --syntax-check ansible/playbook.yml`
 
 The workflows are intentionally non-destructive. They do not run `terraform apply`, do not connect to AWS resources, and do not require cloud credentials or SSH private keys in GitHub.
+
+## Architecture Explanation
+
+This project uses Terraform to provision AWS infrastructure and Ansible to configure the EC2 instance after provisioning.
+
+Terraform creates the VPC, public subnet, internet gateway, route table, security group, and EC2 instance. The subnet is public because its route table sends `0.0.0.0/0` traffic to the Internet Gateway. The EC2 instance receives a public IP and is reachable over HTTP because the security group allows inbound TCP traffic on port 80 from `0.0.0.0/0`.
+
+SSH access is restricted to a trusted public IP using a `/32` CIDR block. This allows administrative access from one known IP address instead of exposing SSH to the entire internet.
+
+Ansible connects to the EC2 instance over SSH using an inventory generated from Terraform output. The playbook installs Nginx, ensures the service is enabled and running, and deploys a custom `index.html` page.
+
+GitHub Actions validates the Terraform and Ansible code without applying infrastructure changes or requiring cloud credentials.
+
+## Known Limitations
+
+- The EC2 instance is public and directly reachable from the internet.
+- SSH is exposed on port 22, although restricted to a trusted `/32` public IP.
+- Terraform state is currently local, not stored remotely.
+- The project does not currently use HTTPS.
+- There is no DNS record or custom domain.
+- There is no monitoring, alerting, or centralized logging.
+- There is no load balancer or high availability.
+- The application is currently a static Nginx page, not a containerized service.
+
+## Production Improvements
+
+For a more production-ready version, I would add:
+
+- Remote Terraform state using S3 with DynamoDB state locking.
+- Private subnets for application instances.
+- An Application Load Balancer as the public entry point.
+- HTTPS using ACM certificates.
+- Route 53 DNS records.
+- AWS Systems Manager Session Manager instead of public SSH.
+- CloudWatch alarms for instance health, CPU, disk, and service availability.
+- Docker-based application deployment.
+- CI/CD plan validation with approval gates before apply.
+
+## Cost Control
+
+This project is designed to stay low-cost for learning:
+
+- Uses a small `t3.micro` EC2 instance.
+- Avoids NAT Gateway in the initial version.
+- Does not use RDS, Load Balancer, or paid managed services in v1.
+- Infrastructure can be destroyed with:
+
+```bash
+cd terraform
+terraform destroy
+```
