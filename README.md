@@ -12,7 +12,13 @@ This project deploys a small production-style web application infrastructure on 
 
 ## Current Status
 
-Initial project setup.
+Working V1 infrastructure is in place.
+
+- Terraform provisions the AWS network, security group, and EC2 web server.
+- Ansible connects to the EC2 instance and configures Nginx.
+- The custom web page is deployed to the server.
+- Terraform validation is covered by GitHub Actions.
+- Ansible syntax validation is documented as part of the project workflow.
 
 ## Planned Architecture
 
@@ -44,8 +50,7 @@ AWS Security Group
 Ubuntu EC2 instance
    |
 Nginx
-
-
+```
 
 ## Ansible Configuration
 
@@ -73,6 +78,7 @@ The Ansible inventory is generated from Terraform output using:
 
 ```bash
 ./scripts/generate_inventory.sh
+```
 
 ## CI Validation
 
