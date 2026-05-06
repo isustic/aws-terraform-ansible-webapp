@@ -73,3 +73,27 @@ The Ansible inventory is generated from Terraform output using:
 
 ```bash
 ./scripts/generate_inventory.sh
+
+## CI Validation
+
+This project uses GitHub Actions for safe infrastructure and configuration validation.
+
+### Terraform Check
+
+Runs automatically on changes to Terraform files and can also be triggered manually.
+
+Checks:
+
+- `terraform fmt -check -recursive`
+- `terraform init`
+- `terraform validate`
+
+### Ansible Check
+
+Runs automatically on changes to Ansible files and can also be triggered manually.
+
+Checks:
+
+- `ansible-playbook -i ansible/inventory.ini.example --syntax-check ansible/playbook.yml`
+
+The workflows are intentionally non-destructive. They do not run `terraform apply`, do not connect to AWS resources, and do not require cloud credentials or SSH private keys in GitHub.
