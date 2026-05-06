@@ -154,3 +154,5 @@ This project is designed to stay low-cost for learning:
 cd terraform
 terraform destroy
 ```
+
+Docker is also installed and managed by Ansible. The playbook ensures Docker is present, enabled, running, and that the `ubuntu` user is added to the `docker` group for non-root container management.
