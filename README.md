@@ -156,3 +156,14 @@ terraform destroy
 ```
 
 Docker is also installed and managed by Ansible. The playbook ensures Docker is present, enabled, running, and that the `ubuntu` user is added to the `docker` group for non-root container management.
+
+## Docker Container Validation
+
+Docker is installed and managed by Ansible. The playbook also runs a test `nginx:alpine` container named `test-nginx`.
+
+The container maps host port `8080` to container port `80`:
+
+```text
+EC2 host port 8080 → container port 80
+```
+
